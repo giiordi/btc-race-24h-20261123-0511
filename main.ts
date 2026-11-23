@@ -89,6 +89,7 @@ await runBars({
     const longAvg = average(SMA_LONG, sumLong);
     if (longAvg !== null && state.seq <= PROBE_BAR_LAST && close > longAvg + (close * BAND_BPS) / 10000) {
       if (state.cash < minNotional) return [];
+      console.error(`entry seq=${state.seq} close=${close} sma120=${longAvg}`);
       return [{ side: 'buy', symbol: 'CBBTC', notional_quote_units: state.cash, max_slippage_bps: MAX_SLIPPAGE_BPS }];
     }
 
@@ -98,6 +99,7 @@ await runBars({
       if (uptick || state.seq >= PROBE_BAR_LAST) {
         const probe = (state.cash * PROBE_NUM) / PROBE_DEN;
         if (probe < minNotional) return [];
+        console.error(`probe seq=${state.seq} close=${close} sma30=${shortAvg}`);
         return [{ side: 'buy', symbol: 'CBBTC', notional_quote_units: probe, max_slippage_bps: MAX_SLIPPAGE_BPS }];
       }
     }
